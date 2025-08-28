@@ -66,7 +66,7 @@ public class FloatDecoder {
 	 */
 	public static boolean isNaN(int value) {
 		boolean allExponentBitsSet = (value & POSITIVE_INFINITY) == POSITIVE_INFINITY;
-	    boolean notZero = (value & LAST_PART_ALL_ONES_MASK) != 0;
+	    boolean notZero = !FloatDecoder.isZero(value);
 	    return allExponentBitsSet && notZero;
 	}
 
