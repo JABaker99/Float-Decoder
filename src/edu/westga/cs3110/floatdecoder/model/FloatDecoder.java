@@ -12,7 +12,6 @@ public class FloatDecoder {
 	private static final int POSITIVE_ZERO = 0b00000000000000000000000000000000;
 	private static final int NEGATIVE_INFINITY = 0b11111111100000000000000000000000;
 	private static final int POSITIVE_INFINITY = 0b01111111100000000000000000000000;
-	private static final int LAST_PART_ALL_ONES_MASK = 0b00000000011111111111111111111111;
 	
 	/**
 	 * Indicates if the given 32-bit value represents a
