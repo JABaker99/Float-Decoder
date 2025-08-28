@@ -11,7 +11,6 @@ public class FloatDecoder {
 	private static final int NEGATIVE_ZERO = 0b10000000000000000000000000000000;
 	private static final int POSITIVE_ZERO = 0b00000000000000000000000000000000;
 	
-	
 	/**
 	 * Indicates if the given 32-bit value represents a
 	 * positive floating-point value.
@@ -31,7 +30,7 @@ public class FloatDecoder {
 	 * @return true if positive or negative zero; false otherwise
 	 */
 	public static boolean isZero(int value) {
-		throw new UnsupportedOperationException("not implemented");
+		return (value == NEGATIVE_ZERO || value == POSITIVE_ZERO);
 	}
 	
 	/**
