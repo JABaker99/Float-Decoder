@@ -4,7 +4,8 @@ package edu.westga.cs3110.floatdecoder.model;
  * Decodes a 32-bit int as a 32-bit floating point value 
  * bit-for-bit.
  * 
- *
+ * @author Jacob Baker
+ *  @version Fall 2025
  */
 public class FloatDecoder {
 	/**
