@@ -12,6 +12,7 @@ public class FloatDecoder {
 	private static final int POSITIVE_ZERO = 0b00000000000000000000000000000000;
 	private static final int NEGATIVE_INFINITY = 0b11111111100000000000000000000000;
 	private static final int POSITIVE_INFINITY = 0b01111111100000000000000000000000;
+	private static final int LAST_PART_ALL_ONES_MASK = 0b00000000011111111111111111111111;
 	
 	/**
 	 * Indicates if the given 32-bit value represents a
@@ -56,7 +57,7 @@ public class FloatDecoder {
 		int exponentValue = exponentSection >>> 23;
 		return (exponentValue - 127);
 	}
-	
+		
 	/**
 	 * Determines if the 32-bit value represents Not-A-Number.
 	 * 
@@ -64,7 +65,9 @@ public class FloatDecoder {
 	 * @return true if NaN; false otherwise
 	 */
 	public static boolean isNaN(int value) {
-		throw new UnsupportedOperationException("not implemented");
+		boolean allExponentBitsSet = (value & POSITIVE_INFINITY) == POSITIVE_INFINITY;
+	    boolean notZero = (value & LAST_PART_ALL_ONES_MASK) != 0;
+	    return allExponentBitsSet && notZero;
 	}
 
 	/**
