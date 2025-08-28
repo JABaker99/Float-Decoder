@@ -52,7 +52,9 @@ public class FloatDecoder {
 	 * @return the properly-biased exponent
 	 */
 	public static int decodeExponent(int value) {
-		throw new UnsupportedOperationException("not implemented");
+		int exponentSection = value & POSITIVE_INFINITY;
+		int exponentValue = exponentSection >>> 23;
+		return (exponentValue - 127);
 	}
 	
 	/**
