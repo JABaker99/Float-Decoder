@@ -10,6 +10,8 @@ package edu.westga.cs3110.floatdecoder.model;
 public class FloatDecoder {
 	private static final int NEGATIVE_ZERO = 0b10000000000000000000000000000000;
 	private static final int POSITIVE_ZERO = 0b00000000000000000000000000000000;
+	private static final int NEGATIVE_INFINITY = 0b11111111100000000000000000000000;
+	private static final int POSITIVE_INFINITY = 0b01111111100000000000000000000000;
 	
 	/**
 	 * Indicates if the given 32-bit value represents a
@@ -40,7 +42,7 @@ public class FloatDecoder {
 	 * @return true if +Infinity or -Infinity; false otherwise
 	 */
 	public static boolean isInfinity(int value) {
-		throw new UnsupportedOperationException("not implemented");
+		return (value == POSITIVE_INFINITY || value == NEGATIVE_INFINITY);
 	}
 	
 	/**
