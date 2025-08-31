@@ -8,10 +8,14 @@ package edu.westga.cs3110.floatdecoder.model;
  *  @version Fall 2025
  */
 public class FloatDecoder {
+	private static final int FRACTION_BITS = 23;
+	private static final int EXPONENT_BIAS = 127;
+	private static final int SIGN_SHIFT = 31;
+	private static final int EXPONENT_SHIFT = 23;
+	
 	private static final int NEGATIVE_ZERO = 0b10000000000000000000000000000000;
 	private static final int POSITIVE_ZERO = 0b00000000000000000000000000000000;
-	private static final int NEGATIVE_INFINITY = 0b11111111100000000000000000000000;
-	private static final int POSITIVE_INFINITY = 0b01111111100000000000000000000000;
+	private static final int EXPONENT_MASK = 0b01111111100000000000000000000000;
 	
 	/**
 	 * Indicates if the given 32-bit value represents a
@@ -31,7 +35,7 @@ public class FloatDecoder {
 	 * @param value a 32-bit value
 	 * @return true if positive or negative zero; false otherwise
 	 */
-	public static boolean isZero(int value) {
+	public static boolean isZero(int value) {	
 		return (value == NEGATIVE_ZERO || value == POSITIVE_ZERO);
 	}
 	
@@ -42,7 +46,7 @@ public class FloatDecoder {
 	 * @return true if +Infinity or -Infinity; false otherwise
 	 */
 	public static boolean isInfinity(int value) {
-		return (value == POSITIVE_INFINITY || value == NEGATIVE_INFINITY);
+		return ((value & EXPONENT_MASK) == EXPONENT_MASK);		
 	}
 	
 	/**
@@ -52,9 +56,9 @@ public class FloatDecoder {
 	 * @return the properly-biased exponent
 	 */
 	public static int decodeExponent(int value) {
-		int exponentSection = value & POSITIVE_INFINITY;
-		int exponentValue = exponentSection >>> 23;
-		return (exponentValue - 127);
+		int exponentSection = value & EXPONENT_MASK;
+		int exponentValue = exponentSection >>> EXPONENT_SHIFT;
+		return (exponentValue - EXPONENT_BIAS);
 	}
 		
 	/**
@@ -64,7 +68,7 @@ public class FloatDecoder {
 	 * @return true if NaN; false otherwise
 	 */
 	public static boolean isNaN(int value) {
-		boolean allExponentBitsSet = (value & POSITIVE_INFINITY) == POSITIVE_INFINITY;
+		boolean allExponentBitsSet = (value & EXPONENT_MASK) == EXPONENT_MASK;
 	    boolean notZero = !FloatDecoder.isZero(value);
 	    return allExponentBitsSet && notZero;
 	}
@@ -78,16 +82,14 @@ public class FloatDecoder {
 	 */
 	public static float decodeSignificantDigits(int value) {
 		int fractionBits = value & ~NEGATIVE_ZERO;
-		
 		float significand = 1.0f;
 
-	    for (int index = 22; index >= 0; index--) {
+	    for (int index = (FRACTION_BITS - 1); index >= 0; index--) {
 	        int bit = (fractionBits >> index) & 1;
 	        if (bit == 1) {
-	            significand += Math.pow(2, -(23 - index));
+	            significand += Math.pow(2, -(FRACTION_BITS - index));
 	        }
 	    }
-	    
 		return significand;
 	}
 	
@@ -98,15 +100,13 @@ public class FloatDecoder {
 	 * @return the float value from the 32-bit integer provided
 	 */
 	public static float decodeAsFloat(int value) {
-		int signBit = (value >>> 31) & 1;
+		int signBit = (value >>> SIGN_SHIFT) & 1;
 		float sign = 1.0f - (signBit << 1);
 
-	    int exponentBits = value & POSITIVE_INFINITY;
-	    int exponent = (exponentBits >> (23)) - 127;
-
+		int exponent = decodeExponent(value);
+		
 	    float significand = decodeSignificantDigits(value);
 
-	    return sign * significand * (float) Math.pow(2, exponent);
+	    return (sign * significand * (float) Math.pow(2, exponent));
 	}
-
 }
