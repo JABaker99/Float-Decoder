@@ -77,7 +77,18 @@ public class FloatDecoder {
 	 * the significant digits portion, i.e., it will be "x2^0"
 	 */
 	public static float decodeSignificantDigits(int value) {
-		throw new UnsupportedOperationException("not implemented");
+		int fractionBits = value & ~NEGATIVE_ZERO;
+		
+		float significand = 1.0f;
+
+	    for (int index = 22; index >= 0; index--) {
+	        int bit = (fractionBits >> index) & 1;
+	        if (bit == 1) {
+	            significand += Math.pow(2, -(index));
+	        }
+	    }
+	    
+		return significand;
 	}
 	
 	/**
