@@ -84,7 +84,7 @@ public class FloatDecoder {
 	    for (int index = 22; index >= 0; index--) {
 	        int bit = (fractionBits >> index) & 1;
 	        if (bit == 1) {
-	            significand += Math.pow(2, -(index));
+	            significand += Math.pow(2, -(23 - index));
 	        }
 	    }
 	    
@@ -98,7 +98,15 @@ public class FloatDecoder {
 	 * @return the float value from the 32-bit integer provided
 	 */
 	public static float decodeAsFloat(int value) {
-		throw new UnsupportedOperationException("not implemented");
+		int signBit = (value >>> 31) & 1;
+		float sign = 1.0f - (signBit << 1);
+
+	    int exponentBits = value & POSITIVE_INFINITY;
+	    int exponent = (exponentBits >> (23)) - 127;
+
+	    float significand = decodeSignificantDigits(value);
+
+	    return sign * significand * (float) Math.pow(2, exponent);
 	}
 
 }
