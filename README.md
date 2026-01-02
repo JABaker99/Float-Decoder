@@ -1,0 +1,3 @@
+# FloatDecoder – IEEE-754 32-Bit Float Interpreter
+
+This project provides a Java implementation for decoding 32-bit integer values as IEEE-754 single-precision floating-point numbers bit-for-bit. The FloatDecoder class exposes utility methods to determine sign, zero, infinity, and NaN states, extract the biased exponent, compute the significand, and fully reconstruct the floating-point value represented by the raw integer. This is useful for learning and demonstrating how floating-point numbers are represented at the binary level, debugging low-level numeric behavior, or validating floating-point operations without relying on built-in conversion helpers.
